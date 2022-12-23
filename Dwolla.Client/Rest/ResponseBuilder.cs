@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace Dwolla.Client.Rest
 
                 try
                 {
-                    return ErrorRegex.IsMatch(rawContent)
+                    return response.StatusCode != HttpStatusCode.OK && ErrorRegex.IsMatch(rawContent)
                         ? Error<T>(response, JsonConvert.DeserializeObject<ErrorResponse>(rawContent), rawContent)
                         : new RestResponse<T>(response, JsonConvert.DeserializeObject<T>(rawContent), rawContent);
                 }
